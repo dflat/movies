@@ -1,0 +1,33 @@
+<head>
+	<title>movie voting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script type="text/javascript" src ="{{ url_for('static', filename = 'js/utils.js') }}"></script>
+    <script type="text/javascript" src ="{{ url_for('static', filename = 'js/vote.js') }}"></script>
+</head>
+
+<body>
+	<div class="header">
+  		<h1>Rank The Movies</h1>
+	</div>
+
+	<div id="items" class="grid-container" user={{user.id}}>
+	    {% for movie in movies %}
+	    <div class="movie grid-item">
+
+	        <div class="movie-poster">
+	            <img class="poster"
+	                    src="{{movie.poster_path}}">
+	            <a class="rank-emblem">{{loop.index0 + 1}}</a>
+	        </div>
+
+	        <div class="movie-info">
+	            <div class="movie-title" data={{movie.id}}>
+	                <h3>{{ movie.title }}</h3>
+	            </div>
+	        </div>
+
+		</div>
+		{% endfor %}
+	</div>
+</body>

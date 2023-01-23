@@ -1,0 +1,17 @@
+<head>
+	<title>Movie Trailers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/trailers.css') }}">
+</head>
+
+<body>
+	<div id="trailers-grid">
+
+        <div class='video-item'> 
+                 
+             <iframe class='youtube-vid' src={{trailer_urls}}> </iframe>  
+
+        </div>
+
+    </div>
+</body>

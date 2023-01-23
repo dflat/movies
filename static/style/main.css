@@ -1,0 +1,81 @@
+:root {
+	--text: #aaa;
+	/*--bg: #222;*/
+	--bg: #222222ed;
+	--border: rgba(55, 55, 55, 0.6); /* rgba(100,100,100,.6);*/
+}
+body {
+	background-color: var(--bg);
+}
+#content {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	background-color: var(--bg);
+}
+.movie {
+	width:25vw;
+	border:solid var(--border) 4px;
+	border-radius: .2em;
+	margin:1em;
+	box-shadow: #050505 0px 0px 10px; /*222*/
+}
+
+.poster {
+	width: 100%;
+}
+
+div.movie-poster {
+	text-align:center;
+	position:relative;
+}
+.rank-emblem {
+	font-size: 10vh;
+	z-index: 1;
+	position: absolute;
+	mix-blend-mode: difference;
+	color: #fff;
+	bottom:0vh;
+	right: 0vh;
+}
+
+.movie-info {
+	padding:1em;
+	color: var(--text);
+}
+.movie-rank {
+	font-size:3vh;
+	text-align: center;
+	
+}
+.movie-title {
+	font-size:1.5vh;
+	font-style: italic;
+	text-align: center;
+	
+}
+
+.obscured {
+	-webkit-filter: saturate(100%) hue-rotate(90deg) brightness(2) blur(15px);
+}
+
+/* for vote.html */
+.grid-container {
+	display:grid;
+	grid-template-columns: auto auto auto;
+	justify-content: center;
+}
+
+.grid-item {
+
+}
+
+.header {
+  padding: 1vh;
+  text-align: center;
+  background: #232323;
+  color: #dcdcdc;
+  font-size: 1em;
+  font-style: italic;
+  border-bottom: solid #1f1f1f 2px;
+}

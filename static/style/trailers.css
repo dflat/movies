@@ -1,0 +1,14 @@
+#trailers-grid {
+	display:grid;
+	grid-template-columns: auto auto;
+	justify-content: center;
+}
+
+.video-item {
+	/*width:40vw;*/
+	/*margin:2vw;*/
+}
+.video-item iframe {
+	width: 90vw;
+	height: 90vh;
+}

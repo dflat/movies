@@ -1,0 +1,22 @@
+.user-button {
+  background-color: #ededed;
+  text-decoration: none;
+  margin: 1em;
+  text-align: center;
+  height: 12vh;
+  /*width: 25vh;*/
+}
+
+.user-card {
+	font-size: 2em;
+	color: black;
+}
+
+.grid-container-users {
+	display:grid;
+	grid-template-columns: auto;
+}
+
+.grid-item-user {
+
+}
