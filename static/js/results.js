@@ -17,6 +17,19 @@ function init() {
     Chart.defaults.borderColor = '#2a2a2a';
     //Chart.defaults.color = '#000';
     make_bar_charts();
+	//setInterval(update_display, 1000);
+    update_display();
+}
+
+function update_display() {
+	update_background_image();
+}
+
+function update_background_image() {
+	/* todo: preload all images, use a hidden/reveal class toggle */
+	let first_movie = document.querySelector('.movie-info');
+	let backdrop_url = first_movie.attributes.backdrop.value;
+	document.querySelector('.bg-img').src =  backdrop_url;
 }
 
 function get_rankings_for_movie(movie_id) {
@@ -63,7 +76,7 @@ function make_bar_charts() {
 
 function make_bar_chart(movie_id, yValues) {
   var xValues = ["1st", "2nd", "3rd", "4th", "5th","6th"]; // TODO: don't hardcode to 6 places
-  var barColors = ["#00ff55", "#33cc55", "#669966", "#996699", "#cc33cc", "#ff00ff"];//'rgba(119, 64, 165, 1)';//rgb(33, 168, 221)';//'rgb(191, 77, 244)'; //'rgb(96, 255, 203)'// "rgba(50,250,50,.8)" //["red", "green","blue","orange","brown"];
+  var barColors = ["#00ff55", "#33cc55", "#669966", "#996699", "#cc33cc", "#ff00ff"];
 
   let options = {
     scales: {

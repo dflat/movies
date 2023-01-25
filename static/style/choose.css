@@ -1,20 +1,29 @@
+
 .user-button {
-  background-color: #ededed;
-  text-decoration: none;
-  margin: 1em;
-  text-align: center;
-  height: 12vh;
-  /*width: 25vh;*/
+
+	display: grid;
+	align-items: center;
+    background-color: #171717;
+    text-decoration: none;
+    margin: 1em;
+    text-align: center;
+    height: 25vh;
+    width: 40vw;
+    border-bottom: solid #000 1px;
+    box-shadow: 1px 1px 3px black;
+    border-radius: .5em;
 }
 
 .user-card {
-	font-size: 2em;
-	color: black;
+	font-size: 4vw;
+	font-style: italic;
+	color: #aaa;
 }
 
 .grid-container-users {
 	display:grid;
-	grid-template-columns: auto;
+	grid-template-columns: auto auto;
+	justify-content: center;
 }
 
 .grid-item-user {

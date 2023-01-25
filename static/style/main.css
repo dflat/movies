@@ -11,7 +11,8 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	background-color: var(--bg);
+	/*background-color: var(--bg);*/ /*testing this off */
+
 }
 .movie {
 	width:25vw;
@@ -19,6 +20,7 @@ body {
 	border-radius: .2em;
 	margin:1em;
 	box-shadow: #050505 0px 0px 10px; /*222*/
+	background-color: #00000059; /* testing TODO */
 }
 
 .poster {
@@ -60,6 +62,12 @@ div.movie-poster {
 }
 
 /* for vote.html */
+.sortable-ghost {
+	opacity: 0;
+}
+.sortable-chosen {
+
+}
 .grid-container {
 	display:grid;
 	grid-template-columns: auto auto auto;
@@ -71,11 +79,44 @@ div.movie-poster {
 }
 
 .header {
+	height: 10vh;
   padding: 1vh;
-  text-align: center;
   background: #232323;
   color: #dcdcdc;
   font-size: 1em;
-  font-style: italic;
   border-bottom: solid #1f1f1f 2px;
+  display: flex;
+  align-items: center;
+}
+
+.main-text {
+	float:left;
+	font-size:2em;
+  font-style: italic;
+	border: 1px solid;
+}
+
+.lock-btn {
+	float:right;
+	font-size:5em;
+	border: 1px solid;
+	margin-left: auto;
+	order:2;
+}
+
+.background-container {
+  position: absolute;
+  z-index: -1;
+  top: 0px;
+  left: 0px;
+}	
+
+.bg-img {
+  width: 100vw;
+	mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 0%,rgba(255, 255, 255, 0) 100%);
+  -webkit-mask-image:linear-gradient(to bottom, rgb(0, 0, 0) 0%,rgba(255, 255, 255, 0) 100%); 
+}
+.background {
+	background-repeat: no-repeat; /* Do not repeat the image */
+	background-size: contain; /* Resize the background image to cover the entire container *
 }

@@ -11,6 +11,10 @@
     </script>
 </head>
 
+<div class='background-container'>
+    <img class='bg-img'>
+</div>    
+
 <div id="content">
 
     {% for movie in movies.values() %}
@@ -24,7 +28,7 @@
 
         </div>
 
-        <div class="movie-info">
+        <div class="movie-info" backdrop={{movie.backdrop_path}}>
 
             <div class="movie-title" data={{movie.id}}>
                 <h3>{{ movie.title }}</h3>
@@ -42,3 +46,4 @@
     {% endfor %}
 
 </div>
+
