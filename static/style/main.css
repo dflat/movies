@@ -7,13 +7,24 @@
 body {
 	background-color: var(--bg);
 }
+
 #content {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	justify-content: center;
-	/*background-color: var(--bg);*/ /*testing this off */
-
 }
+
+@media (max-width: 1000px) {
+  /* CSS that should be displayed if width is equal to or less than 800px goes here */
+  #content {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+}
+
+
+
 .movie {
 	width:25vw;
 	border:solid var(--border) 4px;
@@ -21,6 +32,10 @@ body {
 	margin:3vw; /*1em;*/
 	box-shadow: #050505 0px 0px 10px; /*222*/
 	background-color: #00000059; /* testing TODO */
+}
+
+#content .movie {
+	margin: .1vw;
 }
 
 .poster {
@@ -112,12 +127,21 @@ div.movie-poster {
   z-index: -1;
   top: 0px;
   left: 0px;
+  margin-top: 25vh;
 }	
 
 .bg-img {
   width: 100vw;
-	mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 0%,rgba(255, 255, 255, 0) 100%);
-  -webkit-mask-image:linear-gradient(to bottom, rgb(0, 0, 0) 0%,rgba(255, 255, 255, 0) 100%); 
+	mask-image: linear-gradient(to bottom,
+														rgba(255, 255, 255, 0) 0%,
+														rgb(0, 0, 0) 60%,
+														rgba(255, 255, 255, 0));
+	-webkit-mask-image: linear-gradient(to bottom,
+														rgba(255, 255, 255, 0) 0%,
+														rgb(0, 0, 0) 60%,
+														rgba(255, 255, 255, 0));
+ /* mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 0%,rgba(255, 255, 255, 0) 100%);
+  -webkit-mask-image:linear-gradient(to bottom, rgb(0, 0, 0) 0%,rgba(255, 255, 255, 0) 100%); */
 }
 .background {
 	background-repeat: no-repeat; /* Do not repeat the image */

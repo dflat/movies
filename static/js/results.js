@@ -10,6 +10,7 @@ document.onreadystatechange = function () {
 
 var sortable;
 function init() {
+	//alert(window.screen.width)
     console.log('app started...');
     console.log(rankings_)
     console.log(data_from_server['rankings'])
@@ -23,12 +24,12 @@ function init() {
 	sortable = new Sortable(el, {
       animation:550,
       disabled:true, /* don't allow user to drag order, controlled by server */
-      delay:1000,
-      forceFallback:true,
+      //delay:1000,
+      //forceFallback:true,
 	});
 
+    update_display();
 	setInterval(update_display, 1000);
-    //update_display();
 }
 
 function update_display() {
@@ -42,14 +43,19 @@ function fetch_rank_data() {
     ajax_request(url, update_rank_data);
 }
 function update_rank_data(data) {
+	new_rank_data = JSON.parse(data.response);
+	if (JSON.stringify(new_rank_data) == JSON.stringify(rank_data)) {
+		console.log('no update to rank data.')
+		return
+	}
+	console.log('rank data changed...')
 	rank_data = JSON.parse(data.response);
-	//console.log(rank_data)
     update_chart_data();
     update_scores();
     color_scores();
     sort_movies();
     relabel_ranks();
-    obscure_or_reveal_images();
+    //obscure_or_reveal_images();
 	update_background_image();
 }
 

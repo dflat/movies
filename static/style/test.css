@@ -1,0 +1,13 @@
+#items {
+	background-color:grey;
+	display: flex;
+	justify-content: center;
+}
+
+.item {
+	width: 25vh;
+	height: 25vh;
+	background-color:#111;
+	color: white;
+	margin: 5vw;
+}

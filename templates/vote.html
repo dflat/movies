@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <head>
 	<title>movie voting</title>
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -5,6 +6,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script type="text/javascript" src ="{{ url_for('static', filename = 'js/utils.js') }}"></script>
+    <script>
+        cached_ranks = load_data_from_server('cached_ranks',  {{order|tojson}});
+    </script>
     <script type="text/javascript" src ="{{ url_for('static', filename = 'js/vote.js') }}"></script>
 </head>
 
@@ -20,7 +24,7 @@
 
 	<div id="items" class="grid-container" user={{user.id}}>
 	    {% for movie in movies %}
-	    <div class="movie grid-item">
+	    <div class="movie grid-item" data-id={{movie.id}}>
 
 	        <div class="movie-poster">
 	            <img class="poster"

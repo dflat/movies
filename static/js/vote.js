@@ -27,6 +27,12 @@ function init() {
       },
     });
     add_lock_listener();
+    // cached_ranks variable is set from server in flask template script (top of vote.html)
+    console.log(cached_ranks)
+    if (cached_ranks.length) { // check if any ranks have been cached before attempting to restore sort
+      sortable.sort(cached_ranks, false) // false means do not animate
+      relabel_ranks(post=false);
+    }
 
 }
 
@@ -89,7 +95,7 @@ function set_vote_lock_status(status) {
     }
 }
 
-function relabel_ranks() {
+function relabel_ranks(post=true) {
   console.log('relabelling');
   let movie_rank_nodes = document.querySelectorAll('#items .rank-emblem');
   movie_rank_nodes.forEach((m, ix) => {
@@ -104,7 +110,8 @@ function relabel_ranks() {
     ranks[movie_id] = ix + 1;
   });
   
-  post_ranks(ranks);
+  if (post)
+    post_ranks(ranks);
 }
 
 const HOST = '192.168.1.171'

@@ -260,6 +260,13 @@ def get_movies_by_ids(movie_ids):
         cur = db.execute(sql, movie_ids)
         return [Movie(*m) for m in cur.fetchall()]
 
+def get_ranked_order_by_user_id(session_id, user_id):
+    with DB.get_db() as db: 
+        cur = db.execute('SELECT movie_id, rank FROM rank \
+                          WHERE session_id = (?) AND user_id = (?);',
+                        (session_id, user_id))
+        ranks = {r['movie_id']:r['rank'] for r in cur.fetchall()}
+        return dict(sorted(ranks.items(), key=lambda item: item[1]))
 
 class Rank(dict):
     def __init__(self, id, session_id, user_id, movie_id, rank, ts):
@@ -350,20 +357,26 @@ def vote_get(user_id):
     user_profile = get_user_by_id(user_id)
     print("USER:", user_profile)
 
-    # TODO: check if user has submitted film for this session (in movie_session table)
+    # Check if user has submitted film for this session (in movie_session table)
     #       If not, redirect to search.html page.
-    #       If so, redirect to vote.html
+    #       If so, continue to vote.html
     submissions = get_user_submissions_by_session(session_id)
-    print(submissions)
+    order = list(get_ranked_order_by_user_id(session_id, user_id).keys())
+    print('ORDER:', order)
     if int(user_id) in submissions:
         # user has already submitted a film, continue to voting page
         movies = get_movies_by_session(session_id)
-        return render_template('vote.html', movies=movies, user=user_profile)
+        return render_template('vote.html', movies=movies, user=user_profile, order=order)
     else:
         # user has yet to submit a film, redirect them to movie search page
         print('sending to choose a movie...', user_profile.username)
         return redirect(url_for('search', user_id=user_id))
         #return render_template('search.html', user=user_profile)
+
+
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('test.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
