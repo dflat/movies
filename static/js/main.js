@@ -1,3 +1,5 @@
+/* defunct, replaced by results.js */
+/*
 document.onreadystatechange = function () {
   if (document.readyState === 'complete') {
     init();
@@ -137,3 +139,4 @@ function make_bar_chart(movie_id, yValues) {
   });
 }
 
+*/

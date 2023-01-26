@@ -39,6 +39,28 @@ def api_vote():
     post_rankings(user_id, session, rankings)
     return rankings
 
+@app.route('/api/vote/lock')
+def api_vote_lock():
+    user_id = int(request.args['user_id']) # client posts user_id in query string
+    session_id = get_current_session()['id']
+    print('DATA:', user_id, session_id)
+    update_lock_status(True, session_id, user_id)
+    return jsonify('done')
+
+@app.route('/api/vote/unlock')
+def api_vote_unlock():
+    user_id = int(request.args['user_id'])
+    session_id = get_current_session()['id']
+    update_lock_status(False, session_id, user_id)
+    return jsonify('done')
+
+@app.route('/api/vote/status')
+def api_vote_status():
+    user_id = int(request.args['user_id'])
+    session_id = get_current_session()['id']
+    status = get_lock_status(session_id, user_id)
+    return jsonify(status)
+
 @app.route('/api/movie/submit', methods=['POST'])
 def api_submit_movie():
     movie_info = request.get_json()
@@ -46,6 +68,39 @@ def api_submit_movie():
     print('GOT MOVIE SUBMISSION FROM USER ID:', user_id)
     movie_id = submit_movie(movie_info['title'], user_id)
     return jsonify(movie_id)
+
+@app.route('/api/ranks')
+def api_ranks():
+    session_id, rankings, movie_ids, user_ids, rankings_by_movie = get_ranking_data()
+    totals = {} 
+    for movie_id in movie_ids:
+        totals[movie_id] = sum(r.rank for r in rankings if r.movie_id == movie_id)
+    sorted_totals = dict(sorted(totals.items(), key=lambda item: item[1]))
+    scores = {k:utils.score_movie(raw_score=v,
+                                    n_submissions=len(user_ids),
+                                    n_choices=len(movie_ids))
+                                    for k,v in sorted_totals.items()}
+    locked = get_locked_users(session_id)
+    return jsonify(dict(ranks_by_movie=rankings_by_movie, scores=scores, locked=locked))
+
+def get_lock_status(session_id, user_id):
+    with DB.get_db() as db: 
+        select = 'SELECT * FROM movie_session WHERE session_id = (?) AND user_id = (?);'
+        cur = db.execute(select, (session_id, user_id))
+        return cur.fetchone()['locked_vote']
+
+def get_locked_users(session_id):
+    with DB.get_db() as db: 
+        select = 'SELECT user_id, locked_vote FROM movie_session WHERE session_id = (?);'
+        cur = db.execute(select, (session_id,))
+        results =  {r['user_id']:r['locked_vote'] for r in cur.fetchall()}
+        return results
+
+def update_lock_status(status, session_id, user_id):
+    with DB.get_db() as db: 
+        update = 'UPDATE movie_session SET locked_vote = (?) \
+                  WHERE session_id = (?) AND user_id = (?);'
+        db.execute(update, (status, session_id, user_id))
 
 def submit_movie(movie_name, user_id) -> int:
     # First, register into movie table, or fetch if exists
@@ -108,6 +163,7 @@ def register_user(username, ip_addr):
     with DB.get_db() as db: 
         cur = db.execute('INSERT INTO user (username, ip_addr) \
                           VALUES (?,?);', (username, ip_addr))
+
 def get_movie_id_from_name(movie_name):
     print('movie_name', movie_name)
     with DB.get_db() as db: 
@@ -244,6 +300,9 @@ class User(dict):
     def __repr__(self):
         fields = ', '.join(f'{key}={value}' for key, value in self.__dict__.items())
         return f'{self.__class__.__name__}({fields})'
+
+
+
 
 
 @app.route('/results', methods=['GET'])

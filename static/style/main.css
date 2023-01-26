@@ -18,7 +18,7 @@ body {
 	width:25vw;
 	border:solid var(--border) 4px;
 	border-radius: .2em;
-	margin:1em;
+	margin:3vw; /*1em;*/
 	box-shadow: #050505 0px 0px 10px; /*222*/
 	background-color: #00000059; /* testing TODO */
 }
@@ -58,6 +58,7 @@ div.movie-poster {
 }
 
 .obscured {
+	opacity:0;
 	-webkit-filter: saturate(100%) hue-rotate(90deg) brightness(2) blur(15px);
 }
 
@@ -91,15 +92,17 @@ div.movie-poster {
 
 .main-text {
 	float:left;
-	font-size:2em;
+	font-size:5vh;
   font-style: italic;
-	border: 1px solid;
+  padding-left:4vw;
+	/*border: 1px solid;*/
 }
 
-.lock-btn {
+#lock-btn {
 	float:right;
-	font-size:5em;
-	border: 1px solid;
+	font-size:8vh;
+	/*border: 1px solid;*/
+	padding:1vw;
 	margin-left: auto;
 	order:2;
 }
@@ -118,5 +121,12 @@ div.movie-poster {
 }
 .background {
 	background-repeat: no-repeat; /* Do not repeat the image */
-	background-size: contain; /* Resize the background image to cover the entire container *
+	background-size: contain; /* Resize the background image to cover the entire container */
+}
+
+.locked-in::after {
+	content: "🔒";
+}
+.unlocked::after {
+	content: "🔓";
 }

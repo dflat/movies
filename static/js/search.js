@@ -34,9 +34,11 @@ function add_event_listeners() {
   });
 }
 
+/* // moved to utils.js
 function attach_listener(node, event_type, func) {
   node.addEventListener(event_type, func);
 }
+*/
 
 API_KEY = "60b46634db254955b5ae4abdef23e7b3"
 API_TMDB = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&page=1`

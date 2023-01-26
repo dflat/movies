@@ -6,7 +6,10 @@ document.onreadystatechange = function () {
 
 var sortable;
 function init() {
-    console.log('app started...');
+    console.log('vote.js started...');
+
+    get_lock_status();
+
     var el = document.getElementById('items');
     sortable = new Sortable(el, {
       animation:150,
@@ -21,9 +24,69 @@ function init() {
         evt.newDraggableIndex; // element's new index within new parent, only counting draggable elements
         evt.clone // the clone element
         evt.pullMode;  // when item is in another sortable: `"clone"` if cloning, `true` if moving
-  },
-
+      },
     });
+    add_lock_listener();
+
+}
+
+function add_lock_listener() {
+  let node = document.getElementById('lock-btn')
+  attach_listener(node, 'click', lock_in_vote);
+}
+
+const PASSWORD = 'ullab'
+var locked_in = false;
+function lock_in_vote() {
+  let container = document.querySelector('#items');
+  let user_id = container.attributes.user.value;
+  
+  let path;
+  if (locked_in == false) {
+    path = '/lock';
+    set_vote_lock_status(true)
+  }
+  else {
+    let pw = prompt("Enter password:");
+    if (pw.toLowerCase().trim() != PASSWORD)
+      return;
+    path = '/unlock';
+    set_vote_lock_status(false)
+  }
+
+  //locked_in = !locked_in;
+  //this.classList.toggle('locked-in');
+  //this.classList.toggle('unlocked');
+
+  let url = api_endpoint  + path + `?user_id=${user_id}`;
+  ajax_request(url, ajax_request_done);
+}
+
+function get_lock_status() {
+  let container = document.querySelector('#items');
+  let user_id = container.attributes.user.value;
+
+  let url = api_endpoint  + '/status' + `?user_id=${user_id}`;
+  callback = (data) => {
+    console.log('RESP:', data.response);
+    set_vote_lock_status(JSON.parse(data.response));
+  }
+  ajax_request(url, callback);
+}
+
+function set_vote_lock_status(status) {
+    console.log('lock status:', status)
+    let node = document.getElementById('lock-btn')
+    sortable.options.disabled = status;
+    locked_in = status;
+    if (status==true) {
+      node.classList.add('locked-in')
+      node.classList.remove('unlocked')
+    }
+    if (status==false) {
+      node.classList.add('unlocked')
+      node.classList.remove('locked-in')
+    }
 }
 
 function relabel_ranks() {
@@ -56,19 +119,4 @@ function post_ranks(ranks) {
   ajax_post(url, ranks, ajax_request_done);
 }
 
-/*
-function ajax_post(url, payload, callback){
-    var xhr = new XMLHttpRequest();
-    xhr.onloadend = function(e){
-        callback(xhr);
-    };
-    xhr.open('POST', url);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(JSON.stringify(payload));
-}
 
-function ajax_request_done(data) {
-    console.log('ajax request finished');
-    console.log(data);
-}
-*/

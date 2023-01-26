@@ -29,3 +29,7 @@ function ajax_request_done(data) {
     console.log('ajax request finished')
     console.log(data);
 }
+
+function attach_listener(node, event_type, func) {
+  node.addEventListener(event_type, func);
+}
