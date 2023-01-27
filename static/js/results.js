@@ -42,12 +42,14 @@ function fetch_rank_data() {
 	url = API_ENDPOINT + '/ranks'
     ajax_request(url, update_rank_data);
 }
+
 function update_rank_data(data) {
 	new_rank_data = JSON.parse(data.response);
 	if (JSON.stringify(new_rank_data) == JSON.stringify(rank_data)) {
 		console.log('no update to rank data.')
 		return
 	}
+
 	console.log('rank data changed...')
 	rank_data = JSON.parse(data.response);
     update_chart_data();
@@ -177,6 +179,8 @@ function update_background_image() {
 	//document.querySelector('.bg-img').src =  backdrop_url;
 
 	let first_movie = document.querySelector('.movie');
+	if (!first_movie)
+		return;
 	movie_id = parseInt(first_movie.attributes['data-id'].value)
 	c = document.querySelector('.background-container')
 	im = document.querySelector('.bg-img')

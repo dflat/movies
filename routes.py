@@ -18,10 +18,10 @@ def api_reset():
     advance_session()
 
     # TODO: commented out for testing movie search.html page functionality
-    for ix, title in enumerate(['Melancholia', 'Midsommar', 'The Matrix',
-                                'Fargo', 'Perfect Blue', 'Pulp Fiction']):
-        movie_id = submit_movie(title, user_id=ix+1) 
-        print('movie added to db:', title, movie_id)
+    # for ix, title in enumerate(['Melancholia', 'Midsommar', 'The Matrix',
+    #                             'Fargo', 'Perfect Blue', 'Pulp Fiction']):
+    #     movie_id = submit_movie(title, user_id=ix+1) 
+    #     print('movie added to db:', title, movie_id)
 
     return jsonify("database was reset")
 
@@ -315,6 +315,7 @@ class User(dict):
 @app.route('/results', methods=['GET'])
 def results():
     # pull cumulative ranking data to display
+    # TODO: pull movies from movie_session table, to decouple from whether rankings posted or not
     session_id, rankings, movie_ids, user_ids, rankings_by_movie = get_ranking_data()
     totals = {}
     movies = {}
