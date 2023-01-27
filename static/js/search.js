@@ -32,6 +32,19 @@ function add_event_listeners() {
     }
 
   });
+
+  var container = document.getElementById('movie-results-grid')
+  container.addEventListener("click", function(event) {
+    // console.log('click target', event.target)
+    // console.log('this target', this)
+    // console.log(event)
+    let movie_selection = document.querySelectorAll('.confirm');
+    if (movie_selection.length && this == event.target) {
+      console.log('removing...')
+      movie_selection[0].remove() 
+    }
+  });
+
 }
 
 /* // moved to utils.js
@@ -88,8 +101,44 @@ function populate_movies(movies) {
 const api_submit_movie_endpoint = '/api/movie/submit'
 function submit_movie(evt) {
   let movie_node = evt.currentTarget;
-  let url = api_submit_movie_endpoint + `?user_id=${user_.id}`;
-  ajax_post(url, movie_node.info, submit_movie_finished);
+  if (this.classList.contains('confirm')) {
+    let url = api_submit_movie_endpoint + `?user_id=${user_.id}`;
+    ajax_post(url, movie_node.info, submit_movie_finished);
+  }
+  else {
+    let old_confirm = document.querySelectorAll('.confirm');
+    if (old_confirm.length) { // already showing confirmation
+      old_confirm.forEach(m => m.remove())
+    }
+    else { // no confirm showing, show confirm...
+      let copy = this.cloneNode(deep=true);
+      copy.info = this.info
+      //console.log('INFO', this.info, copy.info)
+      document.getElementById('movie-results-grid').appendChild(copy)
+      copy.classList.add('confirm')
+      attach_listener(copy, 'click', submit_movie);
+      center_on_page(copy)
+    }
+    // let copy = this.cloneNode(deep=true);
+    // let old_confirm = document.querySelectorAll('.confirm');
+    // old_confirm.forEach(m => m.remove())
+    // document.getElementById('movie-results-grid').appendChild(copy)
+    // copy.classList.add('confirm')
+
+  }
+}
+
+function center_on_page(node) {
+  let y_off = window.scrollY
+  let W = window.innerWidth
+  let H = window.innherHeight
+  let box = node.getBoundingClientRect()
+  let top = y_off + 10 
+  let left = W/2 - box.width/2
+  console.log('top', top, 'left', left)
+  node.style.position = 'absolute'
+  node.style.top = top + 'px'
+  node.style.left = left + 'px'
 }
 
 const VOTE_URL = '/vote'

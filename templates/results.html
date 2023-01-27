@@ -19,7 +19,7 @@
 
 <div id="content">
 
-    {% for movie in movies.values() %}
+    {% for movie in movies %}
     <div class="movie" data-id={{movie.id}}>
 
         <div class="movie-poster">
@@ -36,8 +36,8 @@
                 <h3>{{ movie.title }}</h3>
             </div>
 
-            <div class="movie-rank" data={{scores[movie.id]}}>
-                <h3>{{ scores[movie.id] }}%</h3>
+            <div class="movie-rank" data=0>
+                <h3>0%</h3>
             </div>
             <canvas id="myChart{{movie.id}}" style="width:100%;" data={{movie.id}}>
             </canvas>
@@ -47,5 +47,8 @@
     </div>
     {% endfor %}
 
+</div>
+<div id='locked-counter'>
+    <span id='locked-counter-text'></span>
 </div>
 

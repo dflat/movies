@@ -17,7 +17,7 @@ def api_reset():
         register_user(username, ip_addr="bullshit")        
     advance_session()
 
-    # TODO: commented out for testing movie search.html page functionality
+    #TODO: commented out for testing movie search.html page functionality
     # for ix, title in enumerate(['Melancholia', 'Midsommar', 'The Matrix',
     #                             'Fargo', 'Perfect Blue', 'Pulp Fiction']):
     #     movie_id = submit_movie(title, user_id=ix+1) 
@@ -311,9 +311,14 @@ class User(dict):
 
 
 
-
 @app.route('/results', methods=['GET'])
 def results():
+    session_id = get_current_session()['id']
+    movies = get_movies_by_session(session_id)
+    return render_template('results.html', movies=movies, rankings={})
+
+@app.route('/resultsold', methods=['GET'])
+def resultsold():
     # pull cumulative ranking data to display
     # TODO: pull movies from movie_session table, to decouple from whether rankings posted or not
     session_id, rankings, movie_ids, user_ids, rankings_by_movie = get_ranking_data()

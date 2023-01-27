@@ -9,6 +9,10 @@
 	justify-content: center;
 }
 
+#movie-results-grid .movie {
+	-webkit-transition: all 1s ease;
+}
+
 #search-bar-container {
   text-align: center;
 }
@@ -35,4 +39,12 @@
 
 .grid-item {
 
+}
+
+.confirm {
+	position: absolute;
+	z-index: 100;
+	top: 10vh;
+	left: 25vw;
+	width: 50vw;
 }

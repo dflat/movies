@@ -130,6 +130,28 @@ div.movie-poster {
   margin-top: 25vh;
 }	
 
+#locked-counter {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+  display: grid;
+  justify-content: center;
+  /*height: 20vh;*/
+  /*background: rgba(179, 179, 179, 0.2);*/
+  align-items: center;
+  font-size: 3vw;
+  font-style: italic;
+  color: #ffffff54;
+}
+
+#locked-counter-text {
+  background: #00000080;
+  padding: 1vw;
+  border-radius: 1vw;
+  border: solid 1px #ffffff4a;
+  box-shadow: 2px 2px 5px #000000eb;
+}
+
 .bg-img {
   width: 100vw;
 	mask-image: linear-gradient(to bottom,

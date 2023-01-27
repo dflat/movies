@@ -36,6 +36,9 @@ function update_display() {
 	fetch_rank_data();
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+const obscured_param = urlParams.get('obscured');
+
 var rank_data; /* global */
 function fetch_rank_data() {
 	/* api call */
@@ -44,21 +47,38 @@ function fetch_rank_data() {
 }
 
 function update_rank_data(data) {
-	new_rank_data = JSON.parse(data.response);
+	let new_rank_data = JSON.parse(data.response);
 	if (JSON.stringify(new_rank_data) == JSON.stringify(rank_data)) {
 		console.log('no update to rank data.')
 		return
 	}
 
 	console.log('rank data changed...')
-	rank_data = JSON.parse(data.response);
+	rank_data = new_rank_data //JSON.parse(data.response); ###testing This
     update_chart_data();
     update_scores();
     color_scores();
     sort_movies();
     relabel_ranks();
-    //obscure_or_reveal_images();
+
+    if (obscured_param)
+	    obscure_or_reveal_images();
+
 	update_background_image();
+	update_locked_counter();
+}
+
+function update_locked_counter() {
+	if (Object.keys(rank_data['locked']).length == 0) {
+		console.log('no locked or rank data yet..')
+		return;
+	}
+	let locked_users = rank_data['locked'];
+	let n = Object.keys(locked_users).length;
+	let n_locked = Object.values(locked_users).reduce((acc,cur) => acc+cur);
+	let node = document.getElementById('locked-counter-text')
+	node.innerText = `${n_locked}/${n} Votes`
+
 }
 
 var obscured = false;
@@ -107,6 +127,8 @@ function unobscure_images() {
 
 function update_chart_data() {
 	let ranks = rank_data['ranks_by_movie'];
+	if (!Object.keys(ranks).length)
+		return;
 	Object.keys(charts).forEach( (movie_id) => {
 		let chart = charts[movie_id]
 	    let vals = [0,0,0,0,0,0] // todo: make array size dynamic, not hardcoded to 6
@@ -122,6 +144,8 @@ function update_chart_data() {
 function update_scores() {
 	let movies = document.querySelectorAll('.movie')
 	let scores = rank_data['scores']
+	if (!Object.keys(scores).length)
+		return;
 	movies.forEach(movie => {
 		let movie_id = parseInt(movie.attributes['data-id'].value)
 		let score = scores[movie_id]
@@ -218,16 +242,16 @@ function get_color(val) {
 
 var charts = {}; // movie_id => chart
 function make_bar_charts() {
-  let ranks = data_from_server['rankings'];
+  //let ranks = data_from_server['rankings'];
   let info_nodes = document.querySelectorAll('.movie-info canvas');
   info_nodes.forEach(node => {
 
     let movie_id = parseInt(node.attributes.data.value);
     let vals = [0,0,0,0,0,0] // todo: make array size dynamic, not hardcoded to 6
-    let ranklist = ranks[movie_id];
-    ranklist.forEach((r,ix) => {
-      vals[r['rank']-1] += 1;
-    });
+    //let ranklist = ranks[movie_id];
+    //ranklist.forEach((r,ix) => {
+    //  vals[r['rank']-1] += 1;
+    //	/});
     charts[movie_id] = make_bar_chart(movie_id, vals);
 
   });
