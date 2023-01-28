@@ -11,6 +11,7 @@
 
 #movie-results-grid .movie {
 	-webkit-transition: all 1s ease;
+	transition: all 1s ease;
 }
 
 #search-bar-container {
@@ -18,11 +19,12 @@
 }
 
 #movie-search {
-	width: 90%;
+	width: 80vw;
 	height: 10vh;
-	font-size: 5vh;
+	font-size: 4em;
 	font-family: serif;
-	padding: 1em;
+	padding: 2vw;
+	padding-left: 100px;
 	background: #222;
 	border: solid #444 1px;
 	border-radius: .1em;
@@ -37,14 +39,10 @@
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px var(--search-text);
 }
 
-.grid-item {
-
-}
 
 .confirm {
 	position: absolute;
-	z-index: 100;
-	top: 10vh;
-	left: 25vw;
+	z-index: 2;
 	width: 50vw;
 }
+

@@ -27,7 +27,9 @@ def api_reset():
 
 @app.route('/api/advance')
 def api_advance():
-    advance_session()
+    viewers = int(request.args.get('viewers', 6))
+    advance_session(viewers)
+    print(f'new session with {viewers} viewers.')
     return jsonify("database session was advanced")
 
 @app.route('/api/vote', methods=['POST'])
@@ -226,9 +228,10 @@ def post_rankings(user_id, session, rankings):
                 cur = db.execute('INSERT INTO rank (session_id, user_id, movie_id, rank) \
                                   VALUES (?,?,?,?);', (session_id, user_id, movie_id, rank))
 
-def advance_session():
+def advance_session(viewers=6):
     with DB.get_db() as db: 
-        cur = db.execute('INSERT INTO session DEFAULT VALUES;')
+        cur = db.execute('INSERT INTO session (viewer_count) VALUES (?);', (viewers,))
+        #cur = db.execute('INSERT INTO session DEFAULT VALUES;')
 
 def get_current_session():
     with DB.get_db() as db: 

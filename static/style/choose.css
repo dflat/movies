@@ -9,15 +9,17 @@
     text-align: center;
     height: 25vh;
     width: 40vw;
+	color: #aaa;
     border-bottom: solid #000 1px;
     box-shadow: 1px 1px 3px black;
     border-radius: .5em;
+    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
 }
 
 .user-card {
 	font-size: 4vw;
 	font-style: italic;
-	color: #aaa;
 }
 
 .grid-container-users {
@@ -28,4 +30,9 @@
 
 .grid-item-user {
 
+}
+
+.chosen-user {
+	color: #000000;
+	background-color: white;
 }

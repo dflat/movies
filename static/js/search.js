@@ -11,7 +11,7 @@ function init() {
     add_event_listeners();
 }
 
-const AUTO_SEARCH_CHAR_THRESH = 15;
+const AUTO_SEARCH_CHAR_THRESH = 5; //15;
 
 function add_event_listeners() {
   var input = document.getElementById("movie-search");
@@ -102,6 +102,8 @@ const api_submit_movie_endpoint = '/api/movie/submit'
 function submit_movie(evt) {
   let movie_node = evt.currentTarget;
   if (this.classList.contains('confirm')) {
+    this.classList.add('chosen')
+    show_loader(this)
     let url = api_submit_movie_endpoint + `?user_id=${user_.id}`;
     ajax_post(url, movie_node.info, submit_movie_finished);
   }
@@ -117,21 +119,19 @@ function submit_movie(evt) {
       document.getElementById('movie-results-grid').appendChild(copy)
       copy.classList.add('confirm')
       attach_listener(copy, 'click', submit_movie);
-      center_on_page(copy)
+      center_horizontal_on_page(copy)
     }
-    // let copy = this.cloneNode(deep=true);
-    // let old_confirm = document.querySelectorAll('.confirm');
-    // old_confirm.forEach(m => m.remove())
-    // document.getElementById('movie-results-grid').appendChild(copy)
-    // copy.classList.add('confirm')
-
   }
 }
 
-function center_on_page(node) {
+
+
+
+
+function center_horizontal_on_page(node) {
   let y_off = window.scrollY
   let W = window.innerWidth
-  let H = window.innherHeight
+  let H = window.innerHeight
   let box = node.getBoundingClientRect()
   let top = y_off + 10 
   let left = W/2 - box.width/2
@@ -139,6 +139,7 @@ function center_on_page(node) {
   node.style.position = 'absolute'
   node.style.top = top + 'px'
   node.style.left = left + 'px'
+  node.style.margin = 0 + 'px'
 }
 
 const VOTE_URL = '/vote'
