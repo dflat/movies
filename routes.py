@@ -1,12 +1,13 @@
 # movie ranking web service
 from flask import Flask, render_template, request, jsonify, redirect, url_for, Response
+#from werkzeug.serving import WSGIRequestHandler
 import pickle
 import db as DB
 import tmdb_api as tmdb
 import utils
 from json import JSONEncoder
-POSTER_PATH = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" 
-BACKDROP_PATH = "https://image.tmdb.org/t/p/w1280"
+from models import *
+
 DEFAULT_POSTER = '/svYyAWAH3RThMmHcCaJZ97jnTtT.jpg'
 app = Flask(__name__)
 
@@ -24,6 +25,8 @@ def api_reset():
     #     print('movie added to db:', title, movie_id)
 
     return jsonify("database was reset")
+
+@app.route('/api/reset/<session_id>')
 
 @app.route('/api/advance')
 def api_advance():
@@ -84,6 +87,13 @@ def api_ranks():
                                     for k,v in sorted_totals.items()}
     locked = get_locked_users(session_id)
     return jsonify(dict(ranks_by_movie=rankings_by_movie, scores=scores, locked=locked))
+
+@app.route('/api/submissions')
+def api_submissions():
+    session = get_current_session()
+    viewers = session['viewer_count']   
+    movies = get_movies_by_session(session['id'])
+    return jsonify(dict(viewers=viewers, movies=movies))
 
 def get_lock_status(session_id, user_id):
     with DB.get_db() as db: 
@@ -271,47 +281,6 @@ def get_ranked_order_by_user_id(session_id, user_id):
         ranks = {r['movie_id']:r['rank'] for r in cur.fetchall()}
         return dict(sorted(ranks.items(), key=lambda item: item[1]))
 
-class Rank(dict):
-    def __init__(self, id, session_id, user_id, movie_id, rank, ts):
-        super().__init__(self, id=id,session_id=session_id,user_id=user_id,movie_id=movie_id,
-            rank=rank,ts=ts)
-        self.id = id
-        self.session_id = session_id
-        self.user_id = user_id
-        self.movie_id = movie_id
-        self.rank = rank 
-        self.ts = ts
-    def __repr__(self):
-        fields = ', '.join(f'{key}={value}' for key, value in self.__dict__.items())
-        return f'{self.__class__.__name__}({fields})'
-    
-class Movie:
-    def __init__(self, id, title, tmdb_id, poster_path, backdrop_path, summary, ts):
-        self.id = id
-        self.title = title
-        self.tmdb_id = tmdb_id
-        self.poster_path = POSTER_PATH + poster_path
-        self.backdrop_path = BACKDROP_PATH + backdrop_path
-        self.summary = summary
-        self.ts = ts
-
-    def __repr__(self):
-        fields = ', '.join(f'{key}={value}' for key, value in self.__dict__.items())
-        return f'{self.__class__.__name__}({fields})'
-
-class User(dict):
-    def __init__(self, id, username, ip_addr, ts):
-        super().__init__(self, id=id, username=username, ip_addr=ip_addr, ts=ts)
-        self.id = id
-        self.username = username
-        self.ip_addr = ip_addr
-        self.ts = ts
-
-    def __repr__(self):
-        fields = ', '.join(f'{key}={value}' for key, value in self.__dict__.items())
-        return f'{self.__class__.__name__}({fields})'
-
-
 
 
 @app.route('/results', methods=['GET'])
@@ -320,33 +289,10 @@ def results():
     movies = get_movies_by_session(session_id)
     return render_template('results.html', movies=movies, rankings={})
 
-@app.route('/resultsold', methods=['GET'])
-def resultsold():
-    # pull cumulative ranking data to display
-    # TODO: pull movies from movie_session table, to decouple from whether rankings posted or not
-    session_id, rankings, movie_ids, user_ids, rankings_by_movie = get_ranking_data()
-    totals = {}
-    movies = {}
-    for movie_id in movie_ids:
-        movie = get_movie_by_id(movie_id)
-        print(movie)
-        movies[movie_id] = movie
-        totals[movie_id] = sum(r.rank for r in rankings if r.movie_id == movie_id)
-    sorted_totals = dict(sorted(totals.items(), key=lambda item: item[1]))
-    sorted_movies = dict(sorted(movies.items(), key=lambda item: totals[item[1].id]))
-    scores = {k:utils.score_movie(raw_score=v,
-                                    n_submissions=len(user_ids),
-                                    n_choices=len(movie_ids))
-                                    for k,v in sorted_totals.items()}
-    # movies, users, rankings_by_user, sorted_totals    
-    return render_template('results.html', movies=sorted_movies, rankings=rankings_by_movie,
-                            totals=totals, scores=scores)
-
 @app.route('/trailers', methods=['GET'])
 def trailers():
     session_id = get_current_session()['id']
     movies = get_movies_by_session(session_id)
-    #trailer_urls = [tmdb.get_trailer_url(m.tmdb_id) for m in movies]
     trailer_playlist = tmdb.get_trailer_playlist(m.tmdb_id for m in movies)
     return render_template('trailers.html', trailer_urls=trailer_playlist)
 
@@ -383,9 +329,14 @@ def vote_get(user_id):
         #return render_template('search.html', user=user_profile)
 
 
+@app.route('/', methods=['GET'])
+def root():
+    return redirect(url_for('choose'))
+
 @app.route('/test', methods=['GET'])
 def test():
     return render_template('test.html')
 
 if __name__ == '__main__':
+    #WSGIRequestHandler.protocol_version = "HTTP/1.1"
     app.run(host='0.0.0.0', port=80)

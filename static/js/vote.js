@@ -103,10 +103,10 @@ function relabel_ranks(post=true) {
   });
 
   let ranks = {};
-  let movies = document.querySelectorAll('#items .movie-info .movie-title');
+  let movies = document.querySelectorAll('#items .movie');
  console.log(movies)
   movies.forEach((m,ix) => {
-    let movie_id = parseInt(m.attributes.data.value);
+    let movie_id = parseInt(m.attributes['data-id'].value);
     ranks[movie_id] = ix + 1;
   });
   
@@ -126,4 +126,14 @@ function post_ranks(ranks) {
   ajax_post(url, ranks, ajax_request_done);
 }
 
+function get_movie_submissions() {
+   let url = '/api/submissions' 
+   ajax_request(url, update_submissions);
+}
 
+function update_submissions(data) {
+  let submissions = JSON.parse(data.response);
+  let movies = submissions.movies 
+  let viewers = parseInt(submissions.viewers)
+
+}

@@ -5,8 +5,12 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
     <link rel="manifest" href="/manifest.json">
-    
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+	<script>eruda.init();</script>
+
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script type="text/javascript" src ="{{ url_for('static', filename = 'js/utils.js') }}"></script>
     <script>
@@ -26,8 +30,9 @@
 	</div>
 
 	<div id="items" class="grid-container" user={{user.id}}>
+	    <!-- data-id is for use with Sortable.js -->
 	    {% for movie in movies %}
-	    <div class="movie grid-item" data-id={{movie.id}}>
+	    <div class="movie" data-id={{movie.id}}>
 
 	        <div class="movie-poster">
 	            <img class="poster"
@@ -36,7 +41,7 @@
 	        </div>
 
 	        <div class="movie-info">
-	            <div class="movie-title" data={{movie.id}}>
+	            <div class="movie-title">
 	                <h3>{{ movie.title }}</h3>
 	            </div>
 	        </div>

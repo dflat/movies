@@ -5,3 +5,4 @@ workers = 4
 reload = True 
 wsgi_app = "routes:app"
 reload_extra_files = glob("templates/*")
+timeout = 60000
